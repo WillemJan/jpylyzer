@@ -702,6 +702,10 @@ class BoxValidator:
 		# Number of tags (tag count)
 		tagCount=bc.bytesToUInt(self.boxContents[128:132])
 		
+		## TEST
+		print("tagCount (icc): " +str(tagCount))
+		## TEST
+		
 		# List of tag signatures, offsets and sizes
 		# All local to this function; all property exports through "characteristics"
 		# element object!
@@ -1094,6 +1098,10 @@ class BoxValidator:
 		while marker != b'\xff\x90' and offsetNext !=-9999:
 			marker,segLength,segContents,offsetNext=self._getMarkerSegment(offset)
 			
+			## TEST
+			print("Starting validation of " + str(marker))
+			## TEST
+			
 			if marker == b'\xff\x52':
 				# COD (coding style default) marker segment
 				# COD is required
@@ -1148,7 +1156,9 @@ class BoxValidator:
 				# Note that this should result in validation error as all
 				# marker segments are covered above!!
 				offset=offsetNext
-
+		## TEST
+		print("End of loop")
+		## TEST
 
 		# Add foundCODMarker / foundQCDMarker outcome to tests
 		self.testFor("foundCODMarker",foundCODMarker)
@@ -1181,6 +1191,13 @@ class BoxValidator:
 		# Expected number of tiles (as calculated from info in SIZ marker)
 		numberOfTilesExpected=self.characteristics.findElementText('siz/numberOfTiles')
 		
+		## TEST
+		print("numberOfTilesExpected: " +str(numberOfTilesExpected))
+		
+		numberOfTilesExpected=min(numberOfTilesExpected,1000)
+		
+		## TEST
+		
 		# Create list with one entry for each tile
 		tileIndices=[]
 		
@@ -1197,9 +1214,17 @@ class BoxValidator:
 		# Create sub-elements to store tile-part characteristics and tests
 		tilePartCharacteristics=ET.Element('tileParts')
 		tilePartTests=ET.Element('tileParts')
+		
+		## TEST
+		print("Entering tile-parts loop ..")
+		## TEST
 
 		while marker == b'\xff\x90':
 			marker = self.boxContents[offset:offset+2]
+			
+			##TEST
+			print("Offset: " + str(offset))
+			##TEST
 
 			if marker == b'\xff\x90':
 				resultTilePart, characteristicsTilePart,offsetNext = BoxValidator(marker, self.boxContents, offset).validate()
@@ -2082,6 +2107,10 @@ class BoxValidator:
 		while byteStart < noBytes and boxLengthValue != 0:
 
 			boxLengthValue, boxType, byteEnd, boxContents = self._getBox(byteStart, noBytes)
+			
+			## TEST
+			print("Starting validation of " + boxType)
+			## TEST
 
 			# Validate current top level box
 			resultBox,characteristicsBox = BoxValidator(boxType, boxContents).validate()

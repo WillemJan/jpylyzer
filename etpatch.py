@@ -103,7 +103,7 @@ class Element(ET.Element):
 				# Convert text field, depending on type
 				if textType == bytes:
 					textOut = bytesToText(remappedValue)
-				elif textType in[int,float,bool]:
+				elif textType in[int,long,float,bool]:
 					textOut=str(remappedValue)
 				else:
 					textOut=remappedValue
